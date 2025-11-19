@@ -1,34 +1,74 @@
-"""модуль для операций с БД через SQLAlchemy"""
+""" Модуль для работы с бд. CRUD операций через SQLAlchemy """
+
 from sqlalchemy.orm import Session
 from models import Note
+from src.notes_fastapi.schemas import NoteCreate, NoteUpdate
 
-def get_note(db: Session, note_id: int):
 
-    return db.query(Note).filter(Note.id == note_id).first()
+def get_notes(db: Session, skip: int = 0, limit: int = 100):
+    """Возвращает список заметок с пагинацией.
 
-def get_notes(db: Session, skip:  int = 0,  limit: int = 100):
-
+    :param db: Сессия базы данных.
+    :type db: Session
+    :param skip: Количество записей для пропуска.
+    :type skip: int
+    :param limit: Максимальное число возвращаемых записей.
+    :type limit: int
+    :returns: Список заметок.
+    :rtype: list[Note]
+    """
     return db.query(Note).offset(skip).limit(limit).all()
 
-def create_note(db: Session, title: str, content: str):
-    db_note = Note(title=title, content=content)
+
+def get_note(db: Session, note_id: int):
+    """Возвращает заметку по её ID.
+
+    :param db: Сессия базы данных.
+    :type db: Session
+    :param note_id: Идентификатор заметки.
+    :type note_id: int
+    :returns: Объект Note или ``None``, если запись не найдена.
+    :rtype: Note | None
+    """
+    return db.query(Note).filter(Note.id == note_id).first()
+
+
+def create_note(db: Session, note: NoteCreate):
+    """Создаёт и сохраняет новую заметку
+
+    :param db: сессия бд
+    :type db: Session
+    :param note: данные для создания заметки
+    :type note: NoteCreate
+    :returns: Созданная заметка
+    :rtype: Note
+
+    """
+    #db_note = Note(*note.dict())
+    db_note = Note(*note.model_dump())
     db.add(db_note)
     db.commit()
     db.refresh(db_note)
 
     return db_note
 
-def update_note(db: Session, note_id: int, title: str = None, content: str = None):
-    db_note = get_note(db=db, note_id=note_id)
+def update_note(db: Session, note_id: int, note: NoteUpdate):
+    """Обновляет существующую заметку по ID.
 
-    if not note_id:
-        return None
+       :param db: Сессия базы данных.
+       :type db: Session
+       :param note_id: Идентификатор заметки.
+       :type note_id: int
+       :param note: Данные для обновления.
+       :type note: NoteUpdate
+       :returns: Обновлённая заметка или ``None``.
+       :rtype: Note | None
+       """
+    db_note = db.query(Note).filter(Note.id == note_id).first()
+    changes = note.model_dump(exclude_unset=True)
 
-    if title:
-        db_note.title = title
-
-    if content:
-        db_note.content = content
+    for key, value in changes.items():
+        setattr(db_note, key, value)
 
     db.commit()
     db.refresh(db_note)
@@ -36,7 +76,16 @@ def update_note(db: Session, note_id: int, title: str = None, content: str = Non
     return db_note
 
 def delete_note(db: Session, note_id: int):
-    db_note = get_note(db=db, note_id=note_id)
+    """Удалить заметку по ID.
+
+        :param db: Сессия базы данных.
+        :type db: Session
+        :param note_id: Идентификатор заметки.
+        :type note_id: int
+        :returns: True если удаление прошло успешно, иначе False
+        :rtype: bool
+    """
+    db_note = db.query(Note).filter(Note.id == note_id).first()
 
     if not db_note:
         return None
@@ -44,10 +93,7 @@ def delete_note(db: Session, note_id: int):
     db.delete(db_note)
     db.commit()
 
-    return db_note
-
-
-
+    return True
 
 
 
