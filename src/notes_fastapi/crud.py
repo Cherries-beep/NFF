@@ -44,7 +44,6 @@ def create_note(db: Session, note: NoteCreate):
     :rtype: Note
 
     """
-    #db_note = Note(*note.dict())
     db_note = Note(*note.model_dump())
     db.add(db_note)
     db.commit()
@@ -82,8 +81,8 @@ def delete_note(db: Session, note_id: int):
         :type db: Session
         :param note_id: Идентификатор заметки.
         :type note_id: int
-        :returns: True если удаление прошло успешно, иначе False
-        :rtype: bool
+        :returns: db_note если удаление прошло успешно, иначе None
+        :rtype: db_note
     """
     db_note = db.query(Note).filter(Note.id == note_id).first()
 
@@ -93,7 +92,7 @@ def delete_note(db: Session, note_id: int):
     db.delete(db_note)
     db.commit()
 
-    return True
+    return db_note
 
 
 

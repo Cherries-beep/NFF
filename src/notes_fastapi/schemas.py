@@ -4,9 +4,7 @@ from pydantic import BaseModel
 
 
 class NoteBase(BaseModel):
-    """ Базовая схема заметки.
-    Общие поля используемые во входящих и входящих схемах
-    """
+    """ Базовая схема заметки. Общие поля используемые во входящих и входящих схемах """
     title: str
     content: str | None = None
 

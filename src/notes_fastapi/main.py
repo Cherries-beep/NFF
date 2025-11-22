@@ -8,24 +8,10 @@ from src.notes_fastapi.crud import get_notes
 from src.notes_fastapi.database import engine
 from src.notes_fastapi.schemas import NoteCreate, NoteUpdate,  NoteOut
 from src.notes_fastapi.models import Base
-
+from src.notes_fastapi.database import get_db
 
 Base.metadata.create_all(bind=engine) # создание таблиц, если их нет
 app = FastAPI()
-
-# Dependency
-def get_db():
-    """ Возвращает сессию бд. Создает объект SessionLocal, отдает его в виде генератора и закрывает соединение
-    после завершения запроса
-
-    :returns: сессия  sqlAlchemy для операций с бд
-    :rtype: Session
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @app.post('/notes/', response_model=NoteOut, status_code=status.HTTP_201_CREATED)
@@ -114,4 +100,4 @@ async def delete(note_id: int, db: Session = Depends(get_db)):
     if db_note is None:
         raise HTTPException(status_code=404, detail="Note not found")
 
-    return {"message": "Deleted successfully"}
+    return db_note
