@@ -19,12 +19,13 @@ services:
     build: .
     container_name: notes_fastapi_app
     restart: always
-    command: uvicorn notes_fastapi.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn notes_fastapi.main:app --host 0.0.0.0 --port 8000 --reload # команда, которую Docker выполнит при
+    # запуске контейнера. Запуск fastapi сервера
     ports:
       - "8000:8000"
     env_file:
       - .env
     depends_on:
-      - db
+      - db  # контейнер app будет запускаться после контейнера db.
 volumes:
   postgres_data:
