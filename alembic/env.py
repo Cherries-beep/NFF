@@ -1,4 +1,4 @@
-""" Главный alembic-файл для подключения к бд, прогрузки моделей, генерации и применения миграций """
+"""  Главный alembic-файл для подключения к бд, прогрузки моделей, генерации и применения миграций """
 from __future__ import annotations
 import os
 from logging.config import fileConfig
