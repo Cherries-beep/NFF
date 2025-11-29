@@ -1,13 +1,11 @@
 """ Эндпоинты + зависимости """
-
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.notes_fastapi.crud import get_note, get_notes, create_note, update_note, delete_note
-from src.notes_fastapi.crud import get_notes
-from src.notes_fastapi.database import engine
-from src.notes_fastapi.schemas import NoteCreate, NoteUpdate,  NoteOut
-from src.notes_fastapi.models import Base
-from src.notes_fastapi.dependencies import get_db
+from .crud import get_note, get_notes, create_note, update_note, delete_note
+from .database import engine
+from .schemas import NoteCreate, NoteUpdate,  NoteOut
+from .models import Base
+from .dependencies import get_db
 
 
 Base.metadata.create_all(bind=engine) # создание таблиц, если их нет

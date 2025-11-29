@@ -1,5 +1,4 @@
 """ Pydantic модели для валидации входящих/выходящих данных """
-
 from pydantic import BaseModel
 
 

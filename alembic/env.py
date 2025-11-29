@@ -1,19 +1,16 @@
-"""  Главный alembic-файл для подключения к бд, прогрузки моделей, генерации и применения миграций """
+""" Главный alembic-файл для подключения к бд, прогрузки моделей, генерации и применения миграций """
 from __future__ import annotations
 import os
+import sys
 from logging.config import fileConfig
-
-from sqlalchemy import create_engine
-from sqlalchemy import pool # connection pool
-
+from sqlalchemy import engine_from_config, pool
 from alembic import context
 
-from dotenv import load_dotenv
+# Добавляем src в sys.path, чтобы видеть пакет
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-load_dotenv(".env")
-
-# Импорт моделей
-from src.notes_fastapi.models import Base
+# Импортируем Base после добавления пути
+from notes_fastapi.models import Base
 
 # Alembic Config object
 config = context.config
@@ -25,11 +22,8 @@ if config.config_file_name is not None:
 # metadata для автогенерации миграций
 target_metadata = Base.metadata
 
-def get_url():
-    return os.getenv("DATABASE_URL")
-
 def run_migrations_offline():
-    url = get_url()
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -41,13 +35,16 @@ def run_migrations_offline():
         context.run_migrations()
 
 def run_migrations_online():
-    url = get_url()
-    # # не использовать пулл соединений - каждый раз создавать новое подключение
-    connectable = create_engine(url, poolclass=pool.NullPool)
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata
         )
 
         with context.begin_transaction():

@@ -1,7 +1,7 @@
 """ Модуль для работы с бд. CRUD операций через SQLAlchemy """
 
 from sqlalchemy.orm import Session
-from models import Note
+from .models import Note
 from src.notes_fastapi.schemas import NoteCreate, NoteUpdate
 
 
