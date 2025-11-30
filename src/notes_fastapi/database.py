@@ -1,14 +1,12 @@
 """модуль для подключения к PostgreSQL и session maker"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from .config import settings
+from .config import settings # settings уже берет переменные из .env
 
-DATABASE_URL = "postgresql://postgres:password@localhost:5432/notes_db" # урл для приложения фастапи
 
-engine = create_engine( # create_engine - создание подключения к бд. Движок
-    url=DATABASE_URL,
-    echo=True # вывод SQL запросов в консоль
-)
+# create_engine - создание подключения к бд. Движок
+# echo=True вывод SQL запросов в консоль
+engine = create_engine(url=settings.DATABASE_URL, echo=True)
 
 SessionLocal = sessionmaker( # фабрика сессий
     autocommit=False, # не коммитить SQL запрос сразу в базу

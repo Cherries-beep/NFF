@@ -1,10 +1,13 @@
-""" Главный alembic-файл для подключения к бд, прогрузки моделей, генерации и применения миграций """
+""" Главный alembic файл для подключения к бд, прогрузки моделей, генерации и применения миграций """
 from __future__ import annotations
 import os
 import sys
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Добавляем src в sys.path, чтобы видеть пакет
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
