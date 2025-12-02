@@ -4,8 +4,13 @@ import os
 import sys
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
+# Загружаем .env
+load_dotenv()
+
 # Добавляем путь к src, чтобы видеть пакет notes_fastapi
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
+
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
@@ -14,6 +19,11 @@ from notes_fastapi.models import Base
 
 # Alembic Config object
 config = context.config
+
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
+    raise ValueError("DATABASE_URL не найден в окружении!")
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Logging
 if config.config_file_name is not None:
@@ -31,7 +41,6 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
@@ -42,13 +51,11 @@ def run_migrations_online():
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
-
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
         )
-
         with context.begin_transaction():
             context.run_migrations()
 

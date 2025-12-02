@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 from .models import Note
-from src.notes_fastapi.schemas import NoteCreate, NoteUpdate
+from .schemas import NoteCreate, NoteUpdate
 
 
 def get_notes(db: Session, skip: int = 0, limit: int = 100):

@@ -12,7 +12,7 @@ COPY pyproject.toml poetry.lock* /app/
 
 # Устанавливаем зависимости
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+    && poetry install --no-interaction --no-ansi --no-root
 
 # Копируем исходный код
 COPY src/notes_fastapi /app/notes_fastapi

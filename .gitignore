@@ -1,0 +1,13 @@
+# IDE
+.idea/
+
+# Python кэш
+__pycache__/
+*.pyc
+
+# Alembic миграции (временные/компилированные файлы)
+alembic/__pycache__/
+alembic/versions/*.pyc
+
+# src кэш
+src/notes_fastapi/__pycache__/
