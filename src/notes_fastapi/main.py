@@ -23,7 +23,9 @@ async def create_note_endpoint(note: NoteCreate, db: Session = Depends(get_db)):
     :returns: созданная заметка
     :rtype: NoteOut
     """
-    return create_note_endpoint(db, note)
+    created_note = create_note(db=db, note=note)
+
+    return created_note
 
 
 @app.get('/notes/', response_model=list[NoteOut])
@@ -39,7 +41,9 @@ async def read_notes_endpoint(skip: int = 0, limit: int = 100, db: Session = Dep
         :returns: список заметок
         :rtype: list[NoteOut]
     """
-    return get_notes(db=db, skip=skip, limit=limit)
+    all_notes = get_notes(db=db, skip=skip, limit=limit) 
+
+    return all_notes
 
 
 @app.get('/notes/{note_id}', response_model=NoteOut)
@@ -74,7 +78,7 @@ async def update_note_endpoint(note_id: int, note: NoteUpdate, db: Session = Dep
         :returns: NoteOut
         :raises HTTPException: если заметка не найдена (404)
     """
-    updated_note = update_note_endpoint(db=db, note_id=note_id, note=note)
+    updated_note = update_note(db=db, note_id=note_id, note=note)
 
     if updated_note is None:
         raise HTTPException(status_code=404, detail="Note not found")
@@ -83,7 +87,7 @@ async def update_note_endpoint(note_id: int, note: NoteUpdate, db: Session = Dep
 
 
 @app.delete("/notes/{note_id}", response_model=NoteOut)
-async def delete(note_id: int, db: Session = Depends(get_db)):
+async def delete_note_endpoint(note_id: int, db: Session = Depends(get_db)):
     """ Удаление заметки по ID
 
         :param note_id: id заметки

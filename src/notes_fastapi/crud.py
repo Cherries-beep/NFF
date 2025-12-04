@@ -1,5 +1,5 @@
 """ Модуль для работы с бд. CRUD операций через SQLAlchemy """
-
+import logging
 from sqlalchemy.orm import Session
 from .models import Note
 from .schemas import NoteCreate, NoteUpdate
@@ -44,7 +44,7 @@ def create_note(db: Session, note: NoteCreate):
     :rtype: Note
 
     """
-    db_note = Note(*note.model_dump())
+    db_note = Note(**note.model_dump())
     db.add(db_note)
     db.commit()
     db.refresh(db_note)
@@ -64,6 +64,11 @@ def update_note(db: Session, note_id: int, note: NoteUpdate):
        :rtype: Note | None
        """
     db_note = db.query(Note).filter(Note.id == note_id).first()
+
+    if db_note is None:
+        logging.warning(f'Note with id={note_id} not found')
+        return None
+    
     changes = note.model_dump(exclude_unset=True)
 
     for key, value in changes.items():
