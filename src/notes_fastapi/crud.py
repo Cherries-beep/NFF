@@ -93,6 +93,3 @@ def delete_note(db: Session, note_id: int):
     db.commit()
 
     return db_note
-
-
-

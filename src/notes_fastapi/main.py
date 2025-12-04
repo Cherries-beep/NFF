@@ -13,7 +13,7 @@ app = FastAPI()
 
 
 @app.post('/notes/', response_model=NoteOut, status_code=status.HTTP_201_CREATED)
-async def create_note(note: NoteCreate, db: Session = Depends(get_db)):
+async def create_note_endpoint(note: NoteCreate, db: Session = Depends(get_db)):
     """ Создать заметку
 
     :param note: заметка
@@ -23,11 +23,11 @@ async def create_note(note: NoteCreate, db: Session = Depends(get_db)):
     :returns: созданная заметка
     :rtype: NoteOut
     """
-    return create_note(db, note)
+    return create_note_endpoint(db, note)
 
 
 @app.get('/notes/', response_model=list[NoteOut])
-async def read_notes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def read_notes_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """" Возвращает список заметок.
 
         :param skip:
@@ -43,7 +43,7 @@ async def read_notes(skip: int = 0, limit: int = 100, db: Session = Depends(get_
 
 
 @app.get('/notes/{note_id}', response_model=NoteOut)
-async def read_note(note_id: int, db: Session = Depends(get_db)):
+async def read_note_endpoint(note_id: int, db: Session = Depends(get_db)):
     """" Получить заметку по ID
 
         :param note_id: id заметки
@@ -62,7 +62,7 @@ async def read_note(note_id: int, db: Session = Depends(get_db)):
 
 
 @app.put('/notes/{note_id}', response_model=NoteOut)
-async def update_note(note_id: int, note: NoteUpdate, db: Session = Depends(get_db)):
+async def update_note_endpoint(note_id: int, note: NoteUpdate, db: Session = Depends(get_db)):
     """ Обновить заметку по ID
 
         :param note_id: id заметки
@@ -74,7 +74,7 @@ async def update_note(note_id: int, note: NoteUpdate, db: Session = Depends(get_
         :returns: NoteOut
         :raises HTTPException: если заметка не найдена (404)
     """
-    updated_note = update_note(db=db, note_id=note_id, note=note)
+    updated_note = update_note_endpoint(db=db, note_id=note_id, note=note)
 
     if updated_note is None:
         raise HTTPException(status_code=404, detail="Note not found")
