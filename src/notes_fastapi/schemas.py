@@ -34,4 +34,4 @@ class NoteOut(NoteBase):
     id: int
 
     class Config:
-        orm_model = True #  Позволяет возвращать SQLAlchemy объекты напрямую
+        orm_mode = True #  позволить пайдантик читать SQLAlchemy объекты как словари

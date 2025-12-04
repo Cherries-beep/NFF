@@ -18,6 +18,6 @@ class Note(Base):
 
     __tablename__ = 'notes'
 
-    note_id = Column(type_=Integer, primary_key=True, index=True)
+    id  = Column(type_=Integer, primary_key=True, index=True)
     title = Column(type_=String, index=True)
     content = Column(type_=String)
