@@ -25,5 +25,7 @@ services:
       - .env
     depends_on:
       - db  # контейнер app будет запускаться после контейнера db.
+    volumes:
+      - .:/app # смонтировать текущую папку проекта с локалхоста в папку app в контейнере
 volumes:
   postgres_data:
