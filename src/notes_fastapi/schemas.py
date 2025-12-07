@@ -1,6 +1,6 @@
 """ Pydantic модели для валидации входящих/выходящих данных """
 from pydantic import BaseModel
-import datetime
+from datetime import datetime
 
 class NoteBase(BaseModel):
     """ Базовая схема заметки. Общие поля используемые во входящих и входящих схемах """

@@ -3,6 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres:15
+    container_name: notes_fastapi_db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -17,7 +18,7 @@ services:
     build: .
     container_name: notes_fastapi_app
     restart: always
-    command: uvicorn notes_fastapi.main:app --host 0.0.0.0 --port 8000 --reload # команда, которую Docker выполнит при
+    command: uvicorn src.notes_fastapi.main:app --host 0.0.0.0 --port 8000 --reload # команда, которую Docker выполнит при
     # запуске контейнера. Запуск fastapi сервера
     ports:
       - "8000:8000"
