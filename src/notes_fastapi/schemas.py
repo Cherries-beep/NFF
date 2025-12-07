@@ -1,6 +1,6 @@
 """ Pydantic модели для валидации входящих/выходящих данных """
 from pydantic import BaseModel
-
+import datetime
 
 class NoteBase(BaseModel):
     """ Базовая схема заметки. Общие поля используемые во входящих и входящих схемах """
@@ -32,6 +32,7 @@ class NoteOut(NoteBase):
         :type id: int
     """
     id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True #  позволить пайдантик читать SQLAlchemy объекты как словари

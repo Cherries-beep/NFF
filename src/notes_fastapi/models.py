@@ -1,6 +1,6 @@
 """ SQLAlchemy / ORM модели """
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime, func
 from .database import Base
 
 class Note(Base):
@@ -21,3 +21,4 @@ class Note(Base):
     id  = Column(type_=Integer, primary_key=True, index=True)
     title = Column(type_=String, index=True)
     content = Column(type_=String)
+    created_at = Column(DateTime, server_default=func.now()) # значение будет назначено самой бд
