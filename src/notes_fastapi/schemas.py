@@ -2,6 +2,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class NoteBase(BaseModel):
     """ Базовая схема заметки. Общие поля используемые во входящих и входящих схемах """
     title: str
@@ -11,6 +12,18 @@ class NoteBase(BaseModel):
 class NoteCreate(NoteBase):
     """ Схема данных для создания заметки. Для POST запросов """
     pass
+
+
+class NoteDetailCreate(BaseModel):
+    extra_info: str | None = None
+
+
+class NoteDetailOut(NoteDetailCreate):
+    id: int
+    note_id: int
+
+    class Config:
+        from_attributes = True
 
 
 class NoteUpdate(BaseModel):
@@ -32,7 +45,10 @@ class NoteOut(NoteBase):
         :type id: int
     """
     id: int
+    title: str
+    content: str
     created_at: datetime
+    detail: NoteDetailOut | None = None
 
     class Config:
         orm_mode = True #  позволить пайдантик читать SQLAlchemy объекты как словари

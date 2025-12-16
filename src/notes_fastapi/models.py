@@ -24,6 +24,8 @@ class Note(Base):
     content = Column(type_=String)
     created_at = Column(DateTime, server_default=func.now())
 
+    detail = relationship(argument='NoteDetail', back_populates='note', uselist=False) # uselist=False один к одному
+
 
 class NoteDetail(Base):
     __tablename__ = "note_detail"
@@ -33,4 +35,4 @@ class NoteDetail(Base):
     extra_info = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
 
-    note = relationship(argument="Note", back_populates="detail") # связь внутри python
+    note = relationship(argument="Note", back_populates="detail") # связь на уровне python

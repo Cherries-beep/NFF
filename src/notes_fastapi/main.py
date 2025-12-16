@@ -1,9 +1,9 @@
 """ Эндпоинты + зависимости """
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from .crud import get_note, get_notes, create_note, update_note, delete_note
+from .crud import get_note, get_notes, create_note, update_note, delete_note, create_or_update_note_detail
 from .database import engine
-from .schemas import NoteCreate, NoteUpdate,  NoteOut
+from .schemas import NoteCreate, NoteUpdate,  NoteOut, NoteDetailCreate
 from .models import Base
 from .dependencies import get_db
 
@@ -27,6 +27,10 @@ async def create_note_endpoint(note: NoteCreate, db: Session = Depends(get_db)):
 
     return created_note
 
+@app.post('/notes/{note_id}/detail')
+async def add_detail(note_id: int, data: NoteDetailCreate, db: Session = Depends(get_db)):
+
+    return create_or_update_note_detail(db=db, note_id=note_id, data=data)
 
 @app.get('/notes/', response_model=list[NoteOut])
 async def read_notes_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -41,7 +45,7 @@ async def read_notes_endpoint(skip: int = 0, limit: int = 100, db: Session = Dep
         :returns: список заметок
         :rtype: list[NoteOut]
     """
-    all_notes = get_notes(db=db, skip=skip, limit=limit) 
+    all_notes = get_notes(db=db, skip=skip, limit=limit)
 
     return all_notes
 

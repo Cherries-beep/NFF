@@ -1,8 +1,9 @@
 """ Модуль для работы с бд. CRUD операций через SQLAlchemy """
 import logging
-from sqlalchemy.orm import Session
-from .models import Note
-from .schemas import NoteCreate, NoteUpdate
+from sqlalchemy.orm import Session, joinedload
+from .models import Note, NoteDetail
+
+from .schemas import NoteCreate, NoteUpdate, NoteDetailCreate
 
 
 def get_notes(db: Session, skip: int = 0, limit: int = 100):
@@ -17,7 +18,7 @@ def get_notes(db: Session, skip: int = 0, limit: int = 100):
     :returns: Список заметок.
     :rtype: list[Note]
     """
-    return db.query(Note).offset(skip).limit(limit).all()
+    return db.query(Note).options(joinedload(Note.detail)).offset(skip).limit(limit).all()
 
 
 def get_note(db: Session, note_id: int):
@@ -50,6 +51,25 @@ def create_note(db: Session, note: NoteCreate):
     db.refresh(db_note)
 
     return db_note
+
+
+def create_or_update_note_detail(db: Session, note_id: int, data: NoteDetailCreate):
+    detail = db.query(NoteDetail).filter(NoteDetail.note_id == note_id).first()
+
+    if detail:
+
+        for key, value in data.model_dump().items():
+            setattr(detail, key, value)
+
+    else:
+        detail = NoteDetail(note_id=note_id, **data.model_dump())
+        db.add(detail)
+
+    db.commit()
+    db.refresh(detail)
+
+    return detail
+
 
 def update_note(db: Session, note_id: int, note: NoteUpdate):
     """Обновляет существующую заметку по ID.
