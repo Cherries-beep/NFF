@@ -22,7 +22,7 @@ class Note(Base):
     id  = Column(type_=Integer, primary_key=True, index=True)
     title = Column(type_=String, index=True)
     content = Column(type_=String)
-    created_at = Column(DateTime, server_default=func.now()) # значение будет назначено самой бд
+    created_at = Column(DateTime, server_default=func.now())
 
 
 class NoteDetail(Base):
@@ -33,4 +33,4 @@ class NoteDetail(Base):
     extra_info = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
 
-    note = relationship("Note", back_populates="detail")
+    note = relationship(argument="Note", back_populates="detail") # связь внутри python
