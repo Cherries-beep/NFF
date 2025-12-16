@@ -2,7 +2,7 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers
-revision = '0002_create_note_detail_table'
+revision = '54ab043ce824'
 down_revision = '0001_create_notes_table'
 branch_labels = None
 depends_on = None
