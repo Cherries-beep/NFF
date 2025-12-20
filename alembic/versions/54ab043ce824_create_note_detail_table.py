@@ -7,6 +7,7 @@ down_revision = '0001_create_notes_table'
 branch_labels = None
 depends_on = None
 
+
 def upgrade():
     op.create_table(
         'note_detail',
