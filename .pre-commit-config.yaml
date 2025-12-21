@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        language_version: python3
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        language_version: python3
+        args: [
+        "--ignore=E501,W291,W292,W293,W605,F401,F821,E261"
+      ]
